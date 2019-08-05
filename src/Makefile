@@ -7,16 +7,16 @@ LDIR=../lib
 
 LIBS =
 
-_DEPS = instructions.h disassemble.h ines.h
+_DEPS = nes.h util.h cpu.h ops.h dasm.h ines.h ppu.h apu.h cart.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = mos6502.o instructions.o disassemble.o ines.o
+_OBJ  = nes.o util.o cpu.o ops.o dasm.o ines.o ppu.o apu.o cart.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-mos6502: $(OBJ)
+emu: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
 .PHONY: clean
