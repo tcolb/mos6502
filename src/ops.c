@@ -17,7 +17,7 @@ u16 Immediate(CPU* cpu)
 
 u16 Implied(UNUSED CPU* cpu)
 {
-	return 0; // unused
+	return (u16) 0; // unused
 }
 
 u16 Relative(CPU* cpu) 
@@ -117,10 +117,16 @@ void SET_CARRY_LOWER(CPU* cpu, u8 val)
 // unimplemented operation
 
 
-void UNIMPLEMENTED(UNUSED CPU* cpu, UNUSED u16 addr)
+void UNIMPLEMENTED_OP(UNUSED CPU* cpu, UNUSED u16 addr)
 {
 	printf("Error: Unimplemented Instruction Emulated\n");
 	exit(1);
+}
+
+u16 UNIMPLEMENTED_ADDR(UNUSED CPU* cpu)
+{
+    printf("Error: Unimplemented Instruction Emulated\n");
+    exit(1);
 }
 
 
@@ -439,16 +445,16 @@ void BVS(CPU* cpu, u16 addr)
 
 void JMP(CPU* cpu, u16 addr)
 {
-    cpu->PC = cpu->read(cpu, addr);
+    cpu->PC = addr;
 }
 
 void JSR(CPU* cpu, u16 addr)
 {
-    u16 src = cpu->read(cpu, addr);
-    u16 ret_addr = cpu->PC - 1; // should I subtract one?
+    u16 ret_addr = cpu->PC; // how much to subtract, maybe none?
+    printf("!!! JSR Debug: Upper = %02X  Lower = %02X\n", extract_msbyte(ret_addr), extract_lsbyte(ret_addr));
     cpu->stack_push(cpu, extract_msbyte(ret_addr));
     cpu->stack_push(cpu, extract_lsbyte(ret_addr));
-    cpu->PC = src;
+    cpu->PC = addr;
 }
 
 void RTI(CPU* cpu, UNUSED u16 addr)
@@ -586,11 +592,11 @@ void create_optable(Op* table)
 	Op op;
 
     // set unimplemented / illegal ops
-	op.op = UNIMPLEMENTED;
-	op.addr = NULL;
+	op.op = UNIMPLEMENTED_OP;
+	op.addr = UNIMPLEMENTED_ADDR;
     op.cycles = 1;
 
-	for (int i = 0; i < 256; i++) {
+	for (int i = 0; i <= 0xFF; i++) {
 		table[i] = op;
 	}
 
@@ -625,35 +631,35 @@ void create_optable(Op* table)
     op.addr = Absolute_X; table[0x1E] = op;
     // bcc
     op.op = BCC;    
-    op.addr = Implied; table[0x90] = op;
+    op.addr = Relative; table[0x90] = op;
     // bcs
     op.op = BCS;    
-    op.addr = Implied; table[0xB0] = op;
+    op.addr = Relative; table[0xB0] = op;
     // beq
     op.op = BEQ;    
-    op.addr = Implied; table[0xF0] = op;
+    op.addr = Relative; table[0xF0] = op;
     // bit
     op.op = BIT;    
     op.addr = Zero_Page; table[0x24] = op;
     op.addr = Absolute; table[0x2C] = op;
     // bmi
     op.op = BMI; 
-    op.addr = Implied; table[0x30] = op;
+    op.addr = Relative; table[0x30] = op;
     // bne
     op.op = BNE;
-    op.addr = Implied; table[0xD0] = op;
+    op.addr = Relative; table[0xD0] = op;
     // bpl
     op.op = BPL;
-    op.addr = Implied; table[0x10] = op;
+    op.addr = Relative; table[0x10] = op;
     // brk
     op.op = BRK;
     op.addr = Implied; table[0x00] = op;
     // bvc
     op.op = BVC;
-    op.addr = Implied; table[0x50] = op;
+    op.addr = Relative; table[0x50] = op;
     // bvs
     op.op = BVS;
-    op.addr = Implied; table[0x70] = op;
+    op.addr = Relative; table[0x70] = op;
     // clc
     op.op = CLC;
     op.addr = Implied; table[0x18] = op;
@@ -725,7 +731,7 @@ void create_optable(Op* table)
     op.addr = Absolute; table[0x4C] = op;
     // jsr
     op.op = JSR;
-    op.addr = Implied; table[0x20] = op;
+    op.addr = Absolute; table[0x20] = op;
     // lda 
     op.op = LDA;
     op.addr = Immediate; table[0xA9] = op;

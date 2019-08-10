@@ -3,7 +3,6 @@
 #include "cpu.h"
 
 
-
 // stack operations 
 
 
@@ -13,9 +12,11 @@ u8 _stack_pop(CPU *cpu)
     if (cpu->SP == 0xFF)
         cpu->SP = 0x00;
 
+    cpu->SP++;
     u8 temp = cpu->read(cpu, 0x0100 + cpu->SP);
     cpu->write(cpu, 0x0100 + cpu->SP, 0x00); // or another value?
-    cpu->SP++;
+
+    printf("* Stack pop at 0x%02X with 0x%02X\n", cpu->SP, temp);
     return temp;
 }
 
@@ -27,6 +28,7 @@ void _stack_push(CPU *cpu, u8 byte)
         cpu->SP = 0xFF;
 
     cpu->write(cpu, 0x0100 + cpu->SP, byte);
+    printf("* Stack push at 0x%02X with 0x%02X\n", cpu->SP, byte);
     cpu->SP--;
 }
 
@@ -107,57 +109,77 @@ void _set_status(CPU* cpu, u8 status)
 
 void _cpu_step(CPU* this)
 {
+    // debug
+    print_cpu(this);
+
     // fetch
     u8 opcode = this->read(this, this->PC++); 
+    printf("Fetched op: %02X\n", opcode);
 
     // decode
     Op* op = &this->table[opcode];
 
     // fetch address
     u16 addr = op->addr(this);
+    printf("Fetched addr: %04X\n", addr);
 
     // execute
     op->op(this, addr);
 
     // timing
     this->time += op->cycles;
-
-    // debug
-    printf("Op: %02X\n", opcode);
-    printf("Mode value: %02X\n", addr);
-    print_cpu(this);
 }
 
 
 // cpu memory operations
 
 
-u8 _cpu_read(CPU* cpu, u16 addr)
+u8 _basic_read(CPU* this, u16 addr)
 {
-    NES* nes = cpu->nes;
-
-    switch (addr)
-    {
-        case 0x0000 ... 0x1FFF: return nes->cpu->read(nes->cpu, addr);   break;   // CPU
-        case 0x2000 ... 0x3FFF: return nes->ppu->read(nes->ppu, addr);   break;   // PPU
-        case 0x4000 ... 0x4013: return nes->apu->read(nes->apu, addr);   break;   // APU
-        case 0x4014           : return nes->ppu->read(nes->ppu, addr);   break;   // PPU
-        case 0x4015           : return nes->apu->read(nes->apu, addr);   break;   // APU
-        case 0x4016           : return 0;                                break;   // JOY1
-        case 0x4017           : return 0;                                break;   // JOY2
-        case 0x4018 ... 0x401F: return 0;                                break;   // Unused
-        case 0x4020 ... 0xFFFF: return nes->cart->read(nes->cart, addr); break;   // Cartridge
-        default:                                                         exit(1); // out of range
-    }
+    return this->ram[addr];
 }
 
-void _cpu_write(CPU* cpu, u16 addr, u8 byte)
+void _basic_write(CPU* this, u16 addr, u8 byte)
 {
-    NES* nes = cpu->nes;
+    this->ram[addr] = byte;
+}
+
+
+u8 _cpu_read(CPU* this, u16 addr)
+{
+    NES* nes = this->nes;
+    u8 byte = 0;
 
     switch (addr)
     {
-        case 0x0000 ... 0x1FFF: nes->cpu->write(nes->cpu, addr, byte);   break;   // CPU
+        case 0x0000 ... 0x1FFF: byte = this->ram[addr];                  break;   // CPU
+        case 0x2000 ... 0x3FFF: byte = nes->ppu->read(nes->ppu, addr);   break;   // PPU
+        case 0x4000 ... 0x4013: byte = nes->apu->read(nes->apu, addr);   break;   // APU
+        case 0x4014           : byte = nes->ppu->read(nes->ppu, addr);   break;   // PPU
+        case 0x4015           : byte = nes->apu->read(nes->apu, addr);   break;   // APU
+        case 0x4016           : byte = 0;                                break;   // JOY1
+        case 0x4017           : byte = 0;                                break;   // JOY2
+        case 0x4018 ... 0x401F: byte = 0;                                break;   // Unused
+        case 0x4020 ... 0xFFFF: byte = nes->cart->read(nes->cart, addr); break;   // Cartridge
+        default:                                                         exit(1); // out of range
+    }
+
+    // debug
+    printf("# Read at 0x%04X with 0x%02X\n", addr, byte);
+
+    return byte;
+}
+
+void _cpu_write(CPU* this, u16 addr, u8 byte)
+{
+    // debug
+    printf("# Write at 0x%04X with 0x00%02X\n", addr, byte);
+
+    NES* nes = this->nes;
+
+    switch (addr)
+    {
+        case 0x0000 ... 0x1FFF: this->ram[addr] = byte;                  break;   // CPU
         case 0x2000 ... 0x3FFF: nes->ppu->write(nes->ppu, addr, byte);   break;   // PPU
         case 0x4000 ... 0x4013: nes->apu->write(nes->apu, addr, byte);   break;   // APU
         case 0x4014           : nes->ppu->write(nes->ppu, addr, byte);   break;   // PPU
