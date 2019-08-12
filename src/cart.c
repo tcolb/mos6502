@@ -52,9 +52,9 @@ void parse_rom_to_cart(u8* buffer, Cart* cart)
     }
 }
 
+// this is for mapper 0000 - NROM
 u8 _cart_read(Cart* cart, u16 addr)
 {
-	// this is for NROM mapper 0000
 	switch(addr)
 	{
 		case 0x0000 ... 0x5FFF: printf("PRG ROM Read: ERROR Out of Range\n"); exit(1);
@@ -65,9 +65,9 @@ u8 _cart_read(Cart* cart, u16 addr)
 	}
 }
 
-void _cart_write(Cart* cart, u16 addr, u8 byte)
+// this is for mapper 0000 - NROM
+void _cart_write(Cart* cart, u16 addr, UNUSED u8 byte)
 {
-	// this is for NROM mapper 0000
 	switch(addr)
 	{
 		case 0x0000 ... 0x5FFF: printf("PRG ROM Write: ERROR Out of Rrange\n"); exit(1); break;

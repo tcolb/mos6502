@@ -595,273 +595,276 @@ void create_optable(Op* table)
 	op.op = UNIMPLEMENTED_OP;
 	op.addr = UNIMPLEMENTED_ADDR;
     op.cycles = 1;
+    op.bytes = 1;
 
 	for (int i = 0; i <= 0xFF; i++) {
 		table[i] = op;
 	}
 
 	// implement ops
+    // addressing mode   | n-bytes     | cycles.      | byte code
 
     // adc
     op.op = ADC;
-    op.addr = Immediate; table[0x69] = op;
-    op.addr = Zero_Page; table[0x65] = op;
-    op.addr = Zero_Page_X; table[0x75] = op;
-    op.addr = Absolute; table[0x6D] = op;
-    op.addr = Absolute_X; table[0x7D] = op;
-    op.addr = Absolute_Y; table[0x79] = op;
-    op.addr = Indirect_X; table[0x61] = op;
-    op.addr = Indirect_Y; table[0x71] = op;
+    op.addr = Immediate;   op.bytes = 2; op.cycles = 2; table[0x69] = op;
+    op.addr = Zero_Page;   op.bytes = 2; op.cycles = 3; table[0x65] = op;
+    op.addr = Zero_Page_X; op.bytes = 2; op.cycles = 4; table[0x75] = op;
+    op.addr = Absolute;    op.bytes = 3; op.cycles = 4; table[0x6D] = op;
+    op.addr = Absolute_X;  op.bytes = 3; op.cycles = 4; table[0x7D] = op;
+    op.addr = Absolute_Y;  op.bytes = 3; op.cycles = 4; table[0x79] = op;
+    op.addr = Indirect_X;  op.bytes = 2; op.cycles = 6; table[0x61] = op;
+    op.addr = Indirect_Y;  op.bytes = 2; op.cycles = 5; table[0x71] = op;
     // and
     op.op = AND;    
-    op.addr = Immediate; table[0x29] = op;
-    op.addr = Zero_Page; table[0x25] = op;
-    op.addr = Zero_Page_X; table[0x35] = op;
-    op.addr = Absolute; table[0x2D] = op;
-    op.addr = Absolute_X; table[0x3D] = op;
-    op.addr = Absolute_Y; table[0x39] = op;
-    op.addr = Indirect_X; table[0x21] = op;
-    op.addr = Indirect_Y; table[0x31] = op;
+    op.addr = Immediate;   op.bytes = 2; op.cycles = 2; table[0x29] = op;
+    op.addr = Zero_Page;   op.bytes = 2; op.cycles = 3; table[0x25] = op;
+    op.addr = Zero_Page_X; op.bytes = 2; op.cycles = 4; table[0x35] = op;
+    op.addr = Absolute;    op.bytes = 3; op.cycles = 4; table[0x2D] = op;
+    op.addr = Absolute_X;  op.bytes = 3; op.cycles = 4; table[0x3D] = op;
+    op.addr = Absolute_Y;  op.bytes = 3; op.cycles = 4; table[0x39] = op;
+    op.addr = Indirect_X;  op.bytes = 2; op.cycles = 6; table[0x21] = op;
+    op.addr = Indirect_Y;  op.bytes = 2; op.cycles = 5; table[0x31] = op;
     // asl
     op.op = ASL;    
-    op.addr = Accumulator; table[0x0A] = op;
-    op.addr = Zero_Page; table[0x06] = op;
-    op.addr = Zero_Page_X; table[0x16] = op;
-    op.addr = Absolute; table[0x0E] = op;
-    op.addr = Absolute_X; table[0x1E] = op;
+    op.addr = Accumulator; op.bytes = 1; op.cycles = 2; table[0x0A] = op;
+    op.addr = Zero_Page;   op.bytes = 2; op.cycles = 5; table[0x06] = op;
+    op.addr = Zero_Page_X; op.bytes = 2; op.cycles = 6; table[0x16] = op;
+    op.addr = Absolute;    op.bytes = 3; op.cycles = 6; table[0x0E] = op;
+    op.addr = Absolute_X;  op.bytes = 3; op.cycles = 7; table[0x1E] = op;
     // bcc
     op.op = BCC;    
-    op.addr = Relative; table[0x90] = op;
+    op.addr = Relative;    op.bytes = 2; op.cycles = 2; table[0x90] = op;
     // bcs
     op.op = BCS;    
-    op.addr = Relative; table[0xB0] = op;
+    op.addr = Relative;    op.bytes = 2; op.cycles = 2; table[0xB0] = op;
     // beq
     op.op = BEQ;    
-    op.addr = Relative; table[0xF0] = op;
+    op.addr = Relative;    op.bytes = 2; op.cycles = 2; table[0xF0] = op;
     // bit
     op.op = BIT;    
-    op.addr = Zero_Page; table[0x24] = op;
-    op.addr = Absolute; table[0x2C] = op;
+    op.addr = Zero_Page;   op.bytes = 2; op.cycles = 3; table[0x24] = op;
+    op.addr = Absolute;    op.bytes = 3; op.cycles = 4; table[0x2C] = op;
     // bmi
     op.op = BMI; 
-    op.addr = Relative; table[0x30] = op;
+    op.addr = Relative;    op.bytes = 2; op.cycles = 2; table[0x30] = op;
     // bne
     op.op = BNE;
-    op.addr = Relative; table[0xD0] = op;
+    op.addr = Relative;    op.bytes = 2; op.cycles = 2; table[0xD0] = op;
     // bpl
     op.op = BPL;
-    op.addr = Relative; table[0x10] = op;
+    op.addr = Relative;    op.bytes = 2; op.cycles = 2; table[0x10] = op;
     // brk
     op.op = BRK;
-    op.addr = Implied; table[0x00] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 7; table[0x00] = op;
     // bvc
     op.op = BVC;
-    op.addr = Relative; table[0x50] = op;
+    op.addr = Relative;    op.bytes = 2; op.cycles = 2; table[0x50] = op;
     // bvs
     op.op = BVS;
-    op.addr = Relative; table[0x70] = op;
+    op.addr = Relative;    op.bytes = 2; op.cycles = 2; table[0x70] = op;
     // clc
     op.op = CLC;
-    op.addr = Implied; table[0x18] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 2; table[0x18] = op;
     // cld
     op.op = CLD;
-    op.addr = Implied; table[0xD8] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 2; table[0xD8] = op;
     // cli
     op.op = CLI;
-    op.addr = Implied; table[0x58] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 2; table[0x58] = op;
     // clv
     op.op = CLV;
-    op.addr = Implied; table[0xB8] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 2; table[0xB8] = op;
     // cmp
     op.op = CMP;
-    op.addr = Immediate; table[0xC9] = op;
-    op.addr = Zero_Page; table[0xC5] = op;
-    op.addr = Zero_Page_X; table[0xD5] = op;
-    op.addr = Absolute; table[0xCD] = op;
-    op.addr = Absolute_X; table[0xDD] = op;
-    op.addr = Absolute_Y; table[0xD9] = op;
-    op.addr = Indirect_X; table[0xC1] = op;
-    op.addr = Indirect_Y; table[0xD1] = op;
+    op.addr = Immediate;   op.bytes = 2; op.cycles = 2; table[0xC9] = op;
+    op.addr = Zero_Page;   op.bytes = 2; op.cycles = 3; table[0xC5] = op;
+    op.addr = Zero_Page_X; op.bytes = 2; op.cycles = 4; table[0xD5] = op;
+    op.addr = Absolute;    op.bytes = 3; op.cycles = 4; table[0xCD] = op;
+    op.addr = Absolute_X;  op.bytes = 3; op.cycles = 4; table[0xDD] = op;
+    op.addr = Absolute_Y;  op.bytes = 3; op.cycles = 4; table[0xD9] = op;
+    op.addr = Indirect_X;  op.bytes = 2; op.cycles = 6; table[0xC1] = op;
+    op.addr = Indirect_Y;  op.bytes = 2; op.cycles = 5; table[0xD1] = op;
     // cpx
     op.op = CPX;
-    op.addr = Immediate; table[0xE0] = op;
-    op.addr = Zero_Page; table[0xE4] = op;
-    op.addr = Absolute; table[0xEC] = op;
+    op.addr = Immediate;   op.bytes = 2; op.cycles = 2; table[0xE0] = op;
+    op.addr = Zero_Page;   op.bytes = 2; op.cycles = 3; table[0xE4] = op;
+    op.addr = Absolute;    op.bytes = 3; op.cycles = 4; table[0xEC] = op;
      // cpy
     op.op = CPY;
-    op.addr = Immediate; table[0xC0] = op;
-    op.addr = Zero_Page; table[0xC4] = op;
-    op.addr = Absolute; table[0xCC] = op;
+    op.addr = Immediate;   op.bytes = 2; op.cycles = 2; table[0xC0] = op;
+    op.addr = Zero_Page;   op.bytes = 2; op.cycles = 3; table[0xC4] = op;
+    op.addr = Absolute;    op.bytes = 3; op.cycles = 4; table[0xCC] = op;
     // dec
     op.op = DEC;
-    op.addr = Zero_Page; table[0xC6] = op;
-    op.addr = Zero_Page_X; table[0xD6] = op;
-    op.addr = Absolute; table[0xCE] = op;
-    op.addr = Absolute_X; table[0xDE] = op;
+    op.addr = Zero_Page;   op.bytes = 2; op.cycles = 5; table[0xC6] = op;
+    op.addr = Zero_Page_X; op.bytes = 2; op.cycles = 6; table[0xD6] = op;
+    op.addr = Absolute;    op.bytes = 3; op.cycles = 6; table[0xCE] = op;
+    op.addr = Absolute_X;  op.bytes = 3; op.cycles = 7; table[0xDE] = op;
     // dex
     op.op = DEX;
-    op.addr = Implied; table[0xCA] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 2; table[0xCA] = op;
     // dey
     op.op = DEY;
-    op.addr = Implied; table[0x88] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 2; table[0x88] = op;
     // eor
     op.op = EOR;
-    op.addr = Immediate; table[0x49] = op;
-    op.addr = Zero_Page; table[0x45] = op;
-    op.addr = Zero_Page_X; table[0x55] = op;
-    op.addr = Absolute; table[0x4D] = op;
-    op.addr = Absolute_X; table[0x5D] = op;
-    op.addr = Indirect_X; table[0x41] = op;
-    op.addr = Indirect_Y; table[0x51] = op;
+    op.addr = Immediate;   op.bytes = 2; op.cycles = 2; table[0x49] = op;
+    op.addr = Zero_Page;   op.bytes = 2; op.cycles = 3; table[0x45] = op;
+    op.addr = Zero_Page_X; op.bytes = 2; op.cycles = 4; table[0x55] = op;
+    op.addr = Absolute;    op.bytes = 3; op.cycles = 4; table[0x4D] = op;
+    op.addr = Absolute_X;  op.bytes = 3; op.cycles = 4; table[0x5D] = op;
+    op.addr = Absolute_Y;  op.bytes = 3; op.cycles = 4; table[0x59] = op;
+    op.addr = Indirect_X;  op.bytes = 2; op.cycles = 6; table[0x41] = op;
+    op.addr = Indirect_Y;  op.bytes = 2; op.cycles = 5; table[0x51] = op;
     // inc
     op.op = INC;
-    op.addr = Zero_Page; table[0xE6] = op;
-    op.addr = Zero_Page_X; table[0xF6] = op;
-    op.addr = Absolute; table[0xEE] = op;
-    op.addr = Absolute_X; table[0xFE] = op;
+    op.addr = Zero_Page;   op.bytes = 2; op.cycles = 5; table[0xE6] = op;
+    op.addr = Zero_Page_X; op.bytes = 2; op.cycles = 6; table[0xF6] = op;
+    op.addr = Absolute;    op.bytes = 3; op.cycles = 6; table[0xEE] = op;
+    op.addr = Absolute_X;  op.bytes = 3; op.cycles = 7; table[0xFE] = op;
     // inx
     op.op = INX;
-    op.addr = Implied; table[0xE8] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 2; table[0xE8] = op;
     // iny
     op.op = INY;
-    op.addr = Implied; table[0xC8] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 2; table[0xC8] = op;
     // jmp
     op.op = JMP;
-    op.addr = Indirect; table[0x6C] = op;
-    op.addr = Absolute; table[0x4C] = op;
+    op.addr = Indirect;    op.bytes = 3; op.cycles = 5; table[0x6C] = op;
+    op.addr = Absolute;    op.bytes = 3; op.cycles = 5; table[0x4C] = op;
     // jsr
     op.op = JSR;
-    op.addr = Absolute; table[0x20] = op;
+    op.addr = Absolute;    op.bytes = 3; op.cycles = 6; table[0x20] = op;
     // lda 
     op.op = LDA;
-    op.addr = Immediate; table[0xA9] = op;
-    op.addr = Zero_Page; table[0xA5] = op;
-    op.addr = Zero_Page_X; table[0xB5] = op;
-    op.addr = Absolute; table[0xAD] = op;
-    op.addr = Absolute_X; table[0xBD] = op;
-    op.addr = Absolute_Y; table[0xB9] = op;
-    op.addr = Indirect_X; table[0xA1] = op;
-    op.addr = Indirect_Y; table[0xB1] = op;
+    op.addr = Immediate;   op.bytes = 2; op.cycles = 2; table[0xA9] = op;
+    op.addr = Zero_Page;   op.bytes = 2; op.cycles = 3; table[0xA5] = op;
+    op.addr = Zero_Page_X; op.bytes = 2; op.cycles = 4; table[0xB5] = op;
+    op.addr = Absolute;    op.bytes = 3; op.cycles = 4; table[0xAD] = op;
+    op.addr = Absolute_X;  op.bytes = 3; op.cycles = 4; table[0xBD] = op;
+    op.addr = Absolute_Y;  op.bytes = 3; op.cycles = 4; table[0xB9] = op;
+    op.addr = Indirect_X;  op.bytes = 2; op.cycles = 6; table[0xA1] = op;
+    op.addr = Indirect_Y;  op.bytes = 2; op.cycles = 5; table[0xB1] = op;
     // ldx
     op.op = LDX;
-    op.addr = Zero_Page; table[0xA6] = op;
-    op.addr = Zero_Page_Y; table[0xB6] = op;
-    op.addr = Absolute; table[0xAE] = op;
-    op.addr = Absolute_Y; table[0xBE] = op;
-    op.addr = Immediate; table[0xA2] = op;
+    op.addr = Zero_Page;   op.bytes = 2; op.cycles = 2; table[0xA6] = op;
+    op.addr = Zero_Page_Y; op.bytes = 2; op.cycles = 3; table[0xB6] = op;
+    op.addr = Absolute;    op.bytes = 2; op.cycles = 4; table[0xAE] = op;
+    op.addr = Absolute_Y;  op.bytes = 3; op.cycles = 4; table[0xBE] = op;
+    op.addr = Immediate;   op.bytes = 3; op.cycles = 4; table[0xA2] = op;
     // ldy
     op.op = LDY;
-    op.addr = Immediate; table[0xA0] = op;
-    op.addr = Zero_Page; table[0xA4] = op;
-    op.addr = Zero_Page_X; table[0xB4] = op;
-    op.addr = Absolute; table[0xAC] = op;
-    op.addr = Absolute_X; table[0xBC] = op;
+    op.addr = Immediate;   op.bytes = 2; op.cycles = 2; table[0xA0] = op;
+    op.addr = Zero_Page;   op.bytes = 2; op.cycles = 3; table[0xA4] = op;
+    op.addr = Zero_Page_X; op.bytes = 2; op.cycles = 4; table[0xB4] = op;
+    op.addr = Absolute;    op.bytes = 3; op.cycles = 4; table[0xAC] = op;
+    op.addr = Absolute_X;  op.bytes = 3; op.cycles = 4; table[0xBC] = op;
     // lsr
     op.op = LSR;
-    op.addr = Accumulator; table[0x4A] = op;
-    op.addr = Zero_Page; table[0x46] = op;
-    op.addr = Zero_Page_X; table[0x56] = op;
-    op.addr = Absolute; table[0x4E] = op;
-    op.addr = Absolute_X; table[0x5E] = op;
+    op.addr = Accumulator; op.bytes = 1; op.cycles = 2; table[0x4A] = op;
+    op.addr = Zero_Page;   op.bytes = 2; op.cycles = 5; table[0x46] = op;
+    op.addr = Zero_Page_X; op.bytes = 2; op.cycles = 6; table[0x56] = op;
+    op.addr = Absolute;    op.bytes = 3; op.cycles = 6; table[0x4E] = op;
+    op.addr = Absolute_X;  op.bytes = 3; op.cycles = 7; table[0x5E] = op;
     // nop
     op.op = NOP;
-    op.addr = Implied; table[0xEA] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 2; table[0xEA] = op;
     // ora
     op.op = ORA;
-    op.addr = Immediate; table[0x09] = op;
-    op.addr = Zero_Page; table[0x05] = op;
-    op.addr = Zero_Page_X; table[0x15] = op;
-    op.addr = Absolute; table[0x0D] = op;
-    op.addr = Absolute_X; table[0x1D] = op;
-    op.addr = Absolute_Y; table[0x19] = op;
-    op.addr = Indirect_X; table[0x01] = op;
-    op.addr = Indirect_Y; table[0x11] = op;
+    op.addr = Immediate;   op.bytes = 2; op.cycles = 2; table[0x09] = op;
+    op.addr = Zero_Page;   op.bytes = 2; op.cycles = 3; table[0x05] = op;
+    op.addr = Zero_Page_X; op.bytes = 2; op.cycles = 4; table[0x15] = op;
+    op.addr = Absolute;    op.bytes = 3; op.cycles = 4; table[0x0D] = op;
+    op.addr = Absolute_X;  op.bytes = 3; op.cycles = 4; table[0x1D] = op;
+    op.addr = Absolute_Y;  op.bytes = 3; op.cycles = 4; table[0x19] = op;
+    op.addr = Indirect_X;  op.bytes = 2; op.cycles = 6; table[0x01] = op;
+    op.addr = Indirect_Y;  op.bytes = 2; op.cycles = 5; table[0x11] = op;
     // pha
     op.op = PHA;
-    op.addr = Implied; table[0x48] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 3; table[0x48] = op;
     // php
     op.op = PHP;
-    op.addr = Implied; table[0x08] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 3; table[0x08] = op;
     // pla
     op.op = PLA;
-    op.addr = Implied; table[0x68] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 4; table[0x68] = op;
     // plp
     op.op = PLP;
-    op.addr = Implied; table[0x28] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 4; table[0x28] = op;
     // rol
     op.op = ROL;
-    op.addr = Accumulator; table[0x2A] = op;
-    op.addr = Zero_Page; table[0x26] = op;
-    op.addr = Zero_Page_X; table[0x36] = op;
-    op.addr = Absolute; table[0x2E] = op;
-    op.addr = Absolute_X; table[0x3E] = op;
+    op.addr = Accumulator; op.bytes = 1; op.cycles = 2; table[0x2A] = op;
+    op.addr = Zero_Page;   op.bytes = 2; op.cycles = 5; table[0x26] = op;
+    op.addr = Zero_Page_X; op.bytes = 2; op.cycles = 5; table[0x36] = op;
+    op.addr = Absolute;    op.bytes = 3; op.cycles = 6; table[0x2E] = op;
+    op.addr = Absolute_X;  op.bytes = 3; op.cycles = 7; table[0x3E] = op;
     // ror
     op.op = ROR;
-    op.addr = Accumulator; table[0x6A] = op;
-    op.addr = Zero_Page; table[0x66] = op;
-    op.addr = Zero_Page_X; table[0x76] = op;
-    op.addr = Absolute; table[0x6E] = op;
-    op.addr = Absolute_X; table[0x7E] = op;
+    op.addr = Accumulator; op.bytes = 1; op.cycles = 2; table[0x6A] = op;
+    op.addr = Zero_Page;   op.bytes = 2; op.cycles = 5; table[0x66] = op;
+    op.addr = Zero_Page_X; op.bytes = 2; op.cycles = 6; table[0x76] = op;
+    op.addr = Absolute;    op.bytes = 3; op.cycles = 6; table[0x6E] = op;
+    op.addr = Absolute_X;  op.bytes = 3; op.cycles = 7; table[0x7E] = op;
     // rti
     op.op = RTI;
-    op.addr = Implied; table[0x40] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 6; table[0x40] = op;
     // rts
     op.op = RTS;
-    op.addr = Implied; table[0x60] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 6; table[0x60] = op;
     // sbc
     op.op = SBC;
-    op.addr = Immediate; table[0xE9] = op;
-    op.addr = Zero_Page; table[0xE5] = op;
-    op.addr = Zero_Page_X; table[0xF5] = op;
-    op.addr = Absolute; table[0xED] = op;
-    op.addr = Absolute_X; table[0xFD] = op;
-    op.addr = Absolute_Y; table[0xF9] = op;
-    op.addr = Indirect_X; table[0xE1] = op;
-    op.addr = Indirect_Y; table[0xF1] = op;
+    op.addr = Immediate;   op.bytes = 2; op.cycles = 2; table[0xE9] = op;
+    op.addr = Zero_Page;   op.bytes = 2; op.cycles = 3; table[0xE5] = op;
+    op.addr = Zero_Page_X; op.bytes = 2; op.cycles = 4; table[0xF5] = op;
+    op.addr = Absolute;    op.bytes = 3; op.cycles = 4; table[0xED] = op;
+    op.addr = Absolute_X;  op.bytes = 3; op.cycles = 4; table[0xFD] = op;
+    op.addr = Absolute_Y;  op.bytes = 3; op.cycles = 4; table[0xF9] = op;
+    op.addr = Indirect_X;  op.bytes = 2; op.cycles = 6; table[0xE1] = op;
+    op.addr = Indirect_Y;  op.bytes = 2; op.cycles = 5; table[0xF1] = op;
     // sec
     op.op = SEC;
-    op.addr = Implied; table[0x38] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 2; table[0x38] = op;
     // sed
     op.op = SED;
-    op.addr = Implied; table[0xF8] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 2; table[0xF8] = op;
     // sei
     op.op = SEI;
-    op.addr = Implied; table[0x78] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 2; table[0x78] = op;
     // sta
 	op.op = STA;
-	op.addr = Zero_Page; table[0x85] = op;
-	op.addr = Zero_Page_X; table[0x95] = op;
-	op.addr = Absolute; table[0x8D] = op;
-	op.addr = Absolute_X; table[0x9D] = op;
-	op.addr = Absolute_Y; table[0x99] = op;
-	op.addr = Indirect_X; table[0x81] = op;
-	op.addr = Indirect_Y; table[0x91] = op;
+	op.addr = Zero_Page;   op.bytes = 2; op.cycles = 3; table[0x85] = op;
+	op.addr = Zero_Page_X; op.bytes = 2; op.cycles = 4; table[0x95] = op;
+	op.addr = Absolute;    op.bytes = 3; op.cycles = 4; table[0x8D] = op;
+	op.addr = Absolute_X;  op.bytes = 3; op.cycles = 5; table[0x9D] = op;
+	op.addr = Absolute_Y;  op.bytes = 3; op.cycles = 5; table[0x99] = op;
+	op.addr = Indirect_X;  op.bytes = 2; op.cycles = 6; table[0x81] = op;
+	op.addr = Indirect_Y;  op.bytes = 2; op.cycles = 6; table[0x91] = op;
     // stx
     op.op = STX;
-    op.addr = Zero_Page; table[0x86] = op;
-    op.addr = Zero_Page_Y; table[0x96] = op;
-    op.addr = Absolute; table[0x8E] = op;
+    op.addr = Zero_Page;   op.bytes = 2; op.cycles = 3; table[0x86] = op;
+    op.addr = Zero_Page_Y; op.bytes = 2; op.cycles = 4; table[0x96] = op;
+    op.addr = Absolute;    op.bytes = 3; op.cycles = 4; table[0x8E] = op;
     // sty
     op.op = STY;
-    op.addr = Zero_Page; table[0x84] = op;
-    op.addr = Zero_Page_X; table[0x94] = op;
-    op.addr = Absolute; table[0x8C] = op;
+    op.addr = Zero_Page;   op.bytes = 2; op.cycles = 3; table[0x84] = op;
+    op.addr = Zero_Page_X; op.bytes = 2; op.cycles = 4; table[0x94] = op;
+    op.addr = Absolute;    op.bytes = 3; op.cycles = 4; table[0x8C] = op;
     // tax
     op.op = TAX;
-    op.addr = Implied; table[0xAA] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 2; table[0xAA] = op;
     // tay
     op.op = TAY;
-    op.addr = Implied; table[0xA8] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 2; table[0xA8] = op;
     // tsx
     op.op = TSX;
-    op.addr = Implied; table[0xBA] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 2; table[0xBA] = op;
     // txa
     op.op = TXA;
-    op.addr = Implied; table[0x8A] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 2; table[0x8A] = op;
     // txs
     op.op = TXS;
-    op.addr = Implied; table[0x9A] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 2; table[0x9A] = op;
     // tya
     op.op = TYA;
-    op.addr = Implied; table[0x98] = op;
+    op.addr = Implied;     op.bytes = 1; op.cycles = 2; table[0x98] = op;
 }
